@@ -6,7 +6,12 @@
 <body>
     <div class="header">header</div>
     <div class="container">
-        <div class="menu"></div>
+        <div class="menu">
+            <div class="controls">
+            <label for="colorPicker">Choose Line Color: </label>
+            <input type="color" id="colorPicker" value="#000000">
+          </div>
+        </div>
         <div class="drawpad">
             <canvas id="drawingCanvas" width="800" height="600"></canvas>
         </div>
@@ -17,6 +22,11 @@
     
         let isDrawing = false; // Tracks if the mouse is down and drawing
         let lastX = 0, lastY = 0; // Stores the last mouse position
+
+        // Update line color when the color picker changes
+        colorPicker.addEventListener("input", (e) => {
+        ctx.strokeStyle = e.target.value;
+        });
     
         // Start drawing when the mouse is pressed down
         canvas.addEventListener("mousedown", (e) => {
@@ -42,7 +52,7 @@
         // Stop drawing if the mouse leaves the canvas
         canvas.addEventListener("mouseleave", () => isDrawing = false);
     
-        // Configure drawing styles
+        // Initial canvas settings
         ctx.lineWidth = 2; // Line thickness
         ctx.strokeStyle = "black"; // Line color
         ctx.lineCap = "round"; // Smooth line ends
