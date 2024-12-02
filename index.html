@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">header</div>
+    <div class="container">
+        <div class="menu"></div>
+        <div class="drawpad">
+            <canvas id="drawingCanvas" width="800" height="600"></canvas>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById("drawingCanvas");
+        const ctx = canvas.getContext("2d");
+    
+        let isDrawing = false; // Tracks if the mouse is down and drawing
+        let lastX = 0, lastY = 0; // Stores the last mouse position
+    
+        // Start drawing when the mouse is pressed down
+        canvas.addEventListener("mousedown", (e) => {
+          isDrawing = true;
+          const { offsetX, offsetY } = e; // Get mouse position relative to the canvas
+          [lastX, lastY] = [offsetX, offsetY]; // Initialize last position
+        });
+    
+        // Draw on the canvas as the mouse moves
+        canvas.addEventListener("mousemove", (e) => {
+          if (!isDrawing) return; // Stop if the mouse is not pressed
+          const { offsetX, offsetY } = e;
+          ctx.beginPath(); // Start a new line
+          ctx.moveTo(lastX, lastY); // Move to the last position
+          ctx.lineTo(offsetX, offsetY); // Draw a line to the new position
+          ctx.stroke(); // Apply the stroke
+          [lastX, lastY] = [offsetX, offsetY]; // Update the last position
+        });
+    
+        // Stop drawing when the mouse is released
+        canvas.addEventListener("mouseup", () => isDrawing = false);
+    
+        // Stop drawing if the mouse leaves the canvas
+        canvas.addEventListener("mouseleave", () => isDrawing = false);
+    
+        // Configure drawing styles
+        ctx.lineWidth = 2; // Line thickness
+        ctx.strokeStyle = "black"; // Line color
+        ctx.lineCap = "round"; // Smooth line ends
+    </script>
+</body>
+</hmtl>
+
