@@ -10,9 +10,13 @@
             <div class="controls">
             <label for="colorPicker">Choose Line Color: </label>
             <input type="color" id="colorPicker" value="#000000">
+
             <label for="thicknessPicker">Line Thickness: </label>
             <input type="range" id="thicknessPicker" min="1" max="20" value="2">
             <span id="thicknessValue">2</span>
+
+            <label for="modeToggle">Draw on Hover</label>
+            <input type="checkbox" id="modeToggle">
           </div>
         </div>
         <div class="drawpad">
@@ -40,9 +44,23 @@
         ctx.lineWidth = e.target.value;
         thicknessValue.textContent = e.target.value; // Show the current thickness
         });
+
+        const modeToggle = document.getElementById("modeToggle");
+
+        // Draw a line
+        const draw = (e) => {
+            if (!isDrawing) return;
+            const { offsetX, offsetY } = e;
+            ctx.beginPath(); // Start a new line
+            ctx.moveTo(lastX, lastY); // Move to the last position
+            ctx.lineTo(offsetX, offsetY); // Draw a line to the new position
+            ctx.stroke(); // Apply the stroke
+            [lastX, lastY] = [offsetX, offsetY]; // Update the last position
+        };
     
-        // Start drawing when the mouse is pressed down
+        // Start drawing when the mouse is pressed down in click and drag mode
         canvas.addEventListener("mousedown", (e) => {
+          if (modeToggle.checked) return; // Skip if "hover mode" is enabled
           isDrawing = true;
           const { offsetX, offsetY } = e; // Get mouse position relative to the canvas
           [lastX, lastY] = [offsetX, offsetY]; // Initialize last position
@@ -50,20 +68,27 @@
     
         // Draw on the canvas as the mouse moves
         canvas.addEventListener("mousemove", (e) => {
-          if (!isDrawing) return; // Stop if the mouse is not pressed
-          const { offsetX, offsetY } = e;
-          ctx.beginPath(); // Start a new line
-          ctx.moveTo(lastX, lastY); // Move to the last position
-          ctx.lineTo(offsetX, offsetY); // Draw a line to the new position
-          ctx.stroke(); // Apply the stroke
-          [lastX, lastY] = [offsetX, offsetY]; // Update the last position
+            if (modeToggle.checked) {
+                // In hover mode, always draw
+                const { offsetX, offsetY } = e;
+                [lastX, lastY] = [offsetX, offsetY];
+                isDrawing = true;
+                draw(e);
+            } else {
+                // In click mode, draw only if isDrawing is true
+                draw(e);
+            }
         });
     
-        // Stop drawing when the mouse is released
-        canvas.addEventListener("mouseup", () => isDrawing = false);
+        // Mouse up stops drawing in "click and drag" mode
+        canvas.addEventListener("mouseup", () => {
+            if (!modeToggle.checked) isDrawing = false;
+        });
     
-        // Stop drawing if the mouse leaves the canvas
-        canvas.addEventListener("mouseleave", () => isDrawing = false);
+        // Mouse leave stops drawing in either mode
+        canvas.addEventListener("mouseleave", () => {
+            isDrawing = false;
+        });
     
         // Initial canvas settings
         ctx.lineWidth = 2; // Line thickness
