@@ -1,12 +1,19 @@
+body{
+    background-image: url("./cute.jpg");
+}
 .container {
-    height: 1000px;
-    background-color: lightblue;
+    height: 700px;
     display: flex;
 }
 .menu {
     width: 20%;
     height: 100%;
-    background-color: pink;
+    background-color: lightblue;
+}
+.controls {
+    width: 100%;
+    height: 20%;
+    background-color: lightgreen;
 }
 .drawpad {
     width: 80%;

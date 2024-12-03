@@ -8,18 +8,22 @@
     <div class="container">
         <div class="menu">
             <div class="controls">
-            <label for="colorPicker">Choose Line Color: </label>
-            <input type="color" id="colorPicker" value="#000000">
+                <label for="colorPicker">Choose Line Color: </label>
+                <input type="color" id="colorPicker" value="#000000">
 
-            <label for="thicknessPicker">Line Thickness: </label>
-            <input type="range" id="thicknessPicker" min="1" max="20" value="2">
-            <span id="thicknessValue">2</span>
+                <label for="thicknessPicker">Line Thickness: </label>
+                <input type="range" id="thicknessPicker" min="1" max="200" value="2">
+                <div id="thicknessValue">2</div>
 
-            <label for="modeToggle">Draw on Hover</label>
-            <input type="checkbox" id="modeToggle">
-          </div>
+                <label for="modeToggle">Draw on Hover</label>
+                <input type="checkbox" id="modeToggle">
+
+                <label for="opacityPicker">Drawpad Opacity: </label>
+                <input type="range" id="opacityPicker" min="1" max="100" value="50">
+                <div id="opacityValue">0.5</div>
+            </div>
         </div>
-        <div class="drawpad">
+        <div class="drawpad" id="drawpad">
             <canvas id="drawingCanvas" width="800" height="600"></canvas>
         </div>
     </div>
@@ -27,6 +31,7 @@
         const canvas = document.getElementById("drawingCanvas");
         const ctx = canvas.getContext("2d");
         const colorPicker = document.getElementById("colorPicker");
+        const drawpad = document.getElementById("drawpad");
     
         let isDrawing = false; // Tracks if the mouse is down and drawing
         let lastX = 0, lastY = 0; // Stores the last mouse position
@@ -43,6 +48,15 @@
         thicknessPicker.addEventListener("input", (e) => {
         ctx.lineWidth = e.target.value;
         thicknessValue.textContent = e.target.value; // Show the current thickness
+        });
+
+        const opacityPicker = document.getElementById("opacityPicker");
+        const opacityValue = document.getElementById("opacityValue");
+
+        // Update line thickness when the slider changes
+        opacityPicker.addEventListener("input", (e) => {
+            drawpad.style.opacity = (e.target.value / 100).toString();
+            opacityValue.textContent = e.target.value; // Show the current thickness
         });
 
         const modeToggle = document.getElementById("modeToggle");
